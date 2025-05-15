@@ -131,7 +131,7 @@ sudo apt install htop lynx duf bridge-utils
 - duf is Disk usage monitoring tool
 - lynx is CLI based web browser
 (htop is already in the system)
-![[Pasted image 20250514111025.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514111025png)
 
 ```bash
 sudo apt install openntpd openssh-server sudo vim tar intel-microcode
@@ -143,7 +143,7 @@ sudo apt install openntpd openssh-server sudo vim tar intel-microcode
 - tar is a tool to compress and decompress file. Tar is used to decompress most of the downloaded file
 - intel-microcode is a set of procedures written in x86 assembly to increase low level modularity
 (the only package installed is openntpd, the rest is already installed)
-![[Pasted image 20250514111124.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514111124.png)
 
 ### Enable SSH Root Login (why actually?)
 ```bash
@@ -155,7 +155,7 @@ Permit SSH root login by editing the file /etc/ssh/sshd_config and restarting th
 ```bash
 sudo nano /etc/ssh/sshd_config
 ```
-![[Pasted image 20250514111909.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514111909.png)
 
 ```bash
 service ssh restart
@@ -184,7 +184,7 @@ sudo apt update
 sudo apt install cloudstack-management mysql-server
 ```
 You have to update apt first to get the new repository to show up. This will take a long time (an hour or two).
-![[Pasted image 20250514132037.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514132037.png)
 
 ### Configure MySQL
 ```bash
@@ -211,14 +211,14 @@ Check mysql service status
 ```
 systemctl status mysql
 ```
-![[Pasted image 20250514133105.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514133105.png)
 There should be "active (running)" and the Status is "Server is operational".
 
 Deploy Database as Root and Then Create "cloud11" User with Password "cloud11" too. Change the password and IP address to yours.
 ```bash
 sudo cloudstack-setup-databases cloud11:cloud11@localhost --deploy-as=root:root -i 192.168.1.11
 ```
-![[Pasted image 20250514133528.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514133528.png)
 
 ### Configure Primary and Secondary Storage
 ```bash
@@ -266,10 +266,10 @@ sudo apt install qemu-kvm cloudstack-agent
 ```
 
 Enable vnc_listen in /etc/libvirt/qemu.conf (scroll down a bit):
-![[Pasted image 20250514135755.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514135755.png)
 
 Enable LIBVIRTD_ARGS="--listen" in /etc/default/libvirtd:
-![[Pasted image 20250514140026.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514140026.png)
 
 Paste in lines to /etc/libvirt/libvirtd.conf:
 ```
@@ -316,7 +316,7 @@ systemctl restart libvirtd
 ```
 
 ### Configure IPtables Firewall
-![[Pasted image 20250514151645.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514151645.png)
 
 Just paste this (change the IP Address to yours):
 ```bash
@@ -339,7 +339,7 @@ sudo iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 16514 -j 
 ```
 
 Then install iptables-persistent and press yes when prompted to save current IPv4 and IPv6 rules. Don't worry when it says removing cloudstack-agent, just continue.
-![[Pasted image 20250514141609.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514141609.png)
 ```bash
 sudo apt install iptables-persistent
 ```
@@ -356,7 +356,7 @@ sudo iptables-save
 # Save the configuration to rules.v4.bak
 sudo apt install cloudstack-agent
 ```
-![[Pasted image 20250514152314.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514152314.png)
 
 ### Disable apparmour on libvirtd
 ```bash
@@ -375,90 +375,90 @@ tail -f /var/log/cloudstack/management/management-server.log #if you want to tro
 ```
 
 Open your web browser and connect to http://<YOUR_IP_ADDRESS>:8080.
-![[Pasted image 20250514144731.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514144731.png)
 Username: admin
 Password: password
 
-![[Pasted image 20250514144905.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514144905.png)
 Continue with the installation.
 
 You can change the password if you want.
 Username = Password = admin
 
 Zone type: Core (default)
-![[Pasted image 20250514145118.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514145118.png)
 
 Core zone type: Advanced (default)
-![[Pasted image 20250514145122.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514145122.png)
 
 Zone details: fill in the Name, required DNSes, and change the Hypervisor to KVM
-![[Pasted image 20250514145257.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514145257.png)
 
 Network: skip the physical network
-![[Pasted image 20250514145349.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514145349.png)
 For public traffic: reserve a range of IP addresses
-![[Pasted image 20250514145504.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514145504.png)
 For Pod: make a new Pod with a range of reserved IP addresses
-![[Pasted image 20250514145715.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514145715.png)
 For Guest Traffic: use 3300-3399
 
 Add resources: for cluster, make a new cluster
-![[Pasted image 20250514150621.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514150621.png)
 For IP address: insert the Management Server's IP Address and use the root's login credentials
-![[Pasted image 20250514150233.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514150233.png)
 For Primary storage:
-![[Pasted image 20250514150412.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514150412.png)
 For Secondary storage:
-![[Pasted image 20250514152427.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514152427.png)
 
 Launch the zone!
-![[Pasted image 20250514152441.png]]
-![[Pasted image 20250514153539.png]]
-![[Pasted image 20250514153540.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514152441.png)
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514153539.png)
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514153540.png)
 
 Make sure the two system VMs are running:
-![[Pasted image 20250514164430.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514164430.png)
 After this, you should be able to safely reboot the server and comeback to this web console successfully.
 
 ## Installing Instances
 ### ISOs and Templates 
 Register ISOs onto Cloudstack, either through a URL or upload it from your computer.
-![[Pasted image 20250514222535.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514222535.png)
 
 TinyCore-16.0:
-![[Pasted image 20250514223020.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514223020.png)
 
 Ubuntu Server 25.04:
-![[Pasted image 20250515004002.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250515004002.png)
 
 Then you can create templates based on those instances. Then, those templates can be used to create instances.
 
 ### Starting a New Instance
 Go to Compute > Instances then click Add Instance
-![[Pasted image 20250514164559.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514164559.png)
 
 1: admin account
-![[Pasted image 20250514164657.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514164657.png)
 2: deploy on the FRIENDZONE zone.
-![[Pasted image 20250514164658.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514164658.png)
 3: Use the default CentOS template.
-![[Pasted image 20250514164748.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514164748.png)
 4: Use the Small Instance Compute Offering.
-![[Pasted image 20250514164749.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514164749.png)
 5: No thanks (we just use the root disk)
-![[Pasted image 20250514164751.png]]
-![[Pasted image 20250514165451.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514164751.png)
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514165451.png)
 6: Create a new isolated network and use that.
-![[Pasted image 20250514175300.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514175300.png)
 7: Nothing
-![[Pasted image 20250514171529.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514171529.png)
 8: Nothing
-![[Pasted image 20250514171530.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514171530.png)
 9: Name the Instance
-![[Pasted image 20250514171610.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514171610.png)
 Launch!
-![[Pasted image 20250514175321.png]]
-![[Pasted image 20250514175358.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514175321.png)
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514175358.png)
 
 
 ## CentOS Instance Fun Stuff
@@ -469,10 +469,10 @@ Make an isolated network. Then allow all egress from that network. Voila!
 
 ### SSH from outside
 Go to the Source NAT and enable firewall (because it's default deny).
-![[Pasted image 20250514213315.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514213315.png)
 
 Then port forward the port 22 (SSH) into the instance
-![[Pasted image 20250514213353.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514213353.png)
 
 We need to use yum to install OpenSSH, but it's not gonna work because it's past EOL and the repo links are dead. So we have to configure it:
 ```bash
@@ -508,13 +508,13 @@ Then you can ssh into the instance!
 sudo yum install httpd mod_ssl
 ```
 Fill in the blanks:
-![[Pasted image 20250514232040.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514232040.png)
 
 Verify the files were created:
 ```bash
 ls -l /etc/pki/tls/private/ /etc/pki/tls/certs/
 ```
-![[Pasted image 20250514232204.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514232204.png)
 
 Make a directory from which the webserver will serve the web content:
 ```bash
@@ -523,15 +523,15 @@ echo "Hello, World" > /var/www/https/index.html
 ```
 
 Modify the /etc/httpd/conf.d/ssl.conf file to configre httpd to use the keys and the directory (scroll down a bit):
-![[Pasted image 20250514232952.png]]
-![[Pasted image 20250514233206.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514232952.png)
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514233206.png)
 
 Start the httpd service
 ```bash
 sudo service httpd start
 netstat -tlpn
 ```
-![[Pasted image 20250514233249.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250514233249.png)
 
 Modify the firewall to allow https traffic (or in this case, allow everything everywhere all at once because i'm lazy)
 ```bash
@@ -543,8 +543,8 @@ iptables -I FORWARD -j ACCEPT
 Don't forget to configure the port forwarding of Cloudstack.
 
 When browsing, there will be a warning:
-![[Pasted image 20250515001216.png]]
-![[Pasted image 20250515001218.png]]
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250515001216.png)
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/assets/assets/Pasted%20image%2020250515001218.png)
 
 
 ## TODO
