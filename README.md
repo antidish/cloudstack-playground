@@ -1,33 +1,48 @@
 # Playing with Cloudstack
 Cloud Computing class of DTE FTUI - Even Semester 2024/2025 - Group 11:
-- Annisa Ardelia Setiawan (2206059471)
-- Muhammad Farrel Mirawan (2106731554)
-- Andikha Wisanggeni (2106731503)
-- Yehezkiel Jonatan (2006520235)
+- [Annisa Ardelia Setiawan](https://github.com/annisa-ardelia) (2206059471)
+- [Muhammad Farrel Mirawan](https://github.com/farrelmrwn) (2106731554)
+- [Andikha Wisanggeni](https://github.com/AndikhaW) (2106731503)
+- [Yehezkiel Jonatan](https://github.com/antidish) (2006520235)
 
-Instructor: Yan Maraden
-
-Note: in our examples, every password is the same as the username. This is not best practice at all. Please use strong passwords, especially in production environments.
+Instructor: [Yan Maraden](https://github.com/maradens)
 
 ## Environment Setup
-We used a Dell Latitude 3500 laptop for Cloudstack management and agent provided by our instructor, Yan Maraden. The hardware configuration is:
+We used a total of three laptops and one router/switch combo for this project. The first laptop is a Dell Latitude 3500 provided by our instructor and it's used as both Cloudstack Management and Agent, meaning it both governs the Cloudstack implementation and act as the first host in the cluster. The hardware and network configuration is:
 ```
-CPU : Intel Core i5 gen 8
-RAM : 24 GB
-Storage : 250GB
-Network : Ethernet 100GB/s
-Operating System : Ubuntu Server 25.04
-```
-
-Our network configuration is:
-```
+# Dell Latitude 3500
+CPU: Intel i5-8265U @ 3.900GHz, 8 cores, 16 threads
+RAM: 24 GB
+Storage: 250 GB
+Network: Gigabit Ethernet
+Operating System: Ubuntu Server 25.04
+# Network Configuration
 Network Address: 192.168.1.0/24
 Host IP address: 192.168.1.11
 Gateway: 192.168.1.1
+# Cloudstack Management Addressing
 Management IP: 192.168.1.11
 Public IP: 192.168.1.201-192.168.1.210
 System IP: 192.168.1.211-192.168.1.220
 ```
+
+The second is a Lenovo ThinkPad T410 and it's used only as a Cloudstack Agent, meaning it contributes resources such as CPU, memory, and storage to the cluster.
+```
+# Lenovo ThinkPad T410 2516RC5
+CPU: Intel Core i5 M450 @2.40GHz, 2 cores, 4 threads
+RAM: 8 GB
+Storage: OCZ-VERTEX3 240 GB SSD
+Network: Gigabit Ethernet
+Operating System: Ubuntu Server 25.04
+# Network Configuration
+Network Address: 192.168.1.0/24
+Host IP address: 192.168.1.101
+Gateway: 192.168.1.1
+```
+
+Our network topology looks like this:
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/IMG_20250522_032412.jpg)
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/2025-05-22 11_39_50.png)
 
 ## Install Ubuntu Server 25.04
 - We used a flash drive to install Ubuntu Server.
@@ -548,6 +563,7 @@ When browsing, there will be a warning:
 
 
 ## TODO
+- get new uuid, reboot libvirtd and restart cloudstack-management
 - httpd unable to make secure connection
 - https://github.com/apache/cloudstack/issues/7568
 - https://serverfault.com/questions/370931/how-to-make-permanent-changes-to-iptables-of-centos-5-5
