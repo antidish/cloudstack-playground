@@ -1,48 +1,44 @@
-# Playing with Cloudstack
-Cloud Computing class of DTE FTUI - Even Semester 2024/2025 - Group 11:
-- [Annisa Ardelia Setiawan](https://github.com/annisa-ardelia) (2206059471)
-- [Muhammad Farrel Mirawan](https://github.com/farrelmrwn) (2106731554)
-- [Andikha Wisanggeni](https://github.com/AndikhaW) (2106731503)
-- [Yehezkiel Jonatan](https://github.com/antidish) (2006520235)
+# Apache Cloudstack Installation and Configuration
 
-Instructor: [Yan Maraden](https://github.com/maradens)
+
+Cloud Computing Class of DTE FTUI - 2024/2025
+Group 11:
+- Annisa Ardelia Setiawan (2206059471)
+- Muhammad Farrel Mirawan (2106731554)
+- Andikha Wisanggeni (2106731503)
+- Yehezkiel Jonatan (2006520235)
+
+Instructor: Yan Maraden
+
+Note: in our examples, every password is the same as the username. This is not best practice at all. Please use strong passwords, especially in production environments.
+
+## Introduction
+
+![image](https://hackmd.io/_uploads/SkSpP4AMge.png)
+
+Apache CloudStack is open-source software designed to deploy and manage large networks of virtual machines, as a highly available, highly scalable Infrastructure as a Service (laaS) cloud computing platform. It  manages pools of compute, storage, and network resources, providing an on-demand, elastic cloud computing service. Essentially, it turns existing virtual infrastructure into a cloud-based IaaS platform.  CloudStack is used by a number of service providers to offer public cloud services, and by many companies to provide an on-premises (private) cloud offering, or as part of a hybrid cloud solution.
 
 ## Environment Setup
-We used a total of three laptops and one router/switch combo for this project. The first laptop is a Dell Latitude 3500 provided by our instructor and it's used as both Cloudstack Management and Agent, meaning it both governs the Cloudstack implementation and act as the first host in the cluster. The hardware and network configuration is:
+We used a Dell Latitude 3500 laptop for Cloudstack management and agent provided by our instructor, Yan Maraden. 
+
+### Hardware Configuration
 ```
-# Dell Latitude 3500
-CPU: Intel i5-8265U @ 3.900GHz, 8 cores, 16 threads
-RAM: 24 GB
-Storage: 250 GB
-Network: Gigabit Ethernet
-Operating System: Ubuntu Server 25.04
-# Network Configuration
+CPU : Intel Core i5 gen 8
+RAM : 24 GB
+Storage : 250GB
+Network : Ethernet 100GB/s
+Operating System : Ubuntu Server 25.04
+```
+
+### Network Configuration
+```
 Network Address: 192.168.1.0/24
 Host IP address: 192.168.1.11
 Gateway: 192.168.1.1
-# Cloudstack Management Addressing
 Management IP: 192.168.1.11
 Public IP: 192.168.1.201-192.168.1.210
 System IP: 192.168.1.211-192.168.1.220
 ```
-
-The second is a Lenovo ThinkPad T410 and it's used only as a Cloudstack Agent, meaning it contributes resources such as CPU, memory, and storage to the cluster.
-```
-# Lenovo ThinkPad T410 2516RC5
-CPU: Intel Core i5 M450 @2.40GHz, 2 cores, 4 threads
-RAM: 8 GB
-Storage: OCZ-VERTEX3 240 GB SSD
-Network: Gigabit Ethernet
-Operating System: Ubuntu Server 25.04
-# Network Configuration
-Network Address: 192.168.1.0/24
-Host IP address: 192.168.1.101
-Gateway: 192.168.1.1
-```
-
-Our network topology looks like this:
-![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/IMG_20250522_032412.jpg)
-![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/2025-05-22 11_39_50.png)
 
 ## Install Ubuntu Server 25.04
 - We used a flash drive to install Ubuntu Server.
@@ -68,13 +64,17 @@ Our network topology looks like this:
 
 ## Install Cloudstack on Ubuntu Server 25.04
 Sources:
-- https://github.com/AhmadRifqi86/cloudstack-install-and-configure/tree/main/cloudstack-install
-- [Apache Cloudstack 4.18 Installation on Ubuntu Server 22.04 LTS](https://www.youtube.com/watch?v=txQTvnF9jk8)
 - https://www.youtube.com/watch?v=DlJg3LYvIIs
 - https://www.youtube.com/watch?v=mvuSBFGSYWI&list=PLW7vgBNPiQhmvj6dnS5ss3IdTqHCqvknm
 
 ### Network Configuration
-There's a file in /etc/netplan/50-cloud-init.yaml. Edit that file into this (change the network address into your host IP address and the network interface aswell):
+There's a file in /etc/netplan/50-cloud-init.yaml. 
+
+```
+cd /etc/netplan
+sudo nano ./50-cloud-init.yaml
+```
+Edit that file into this (change the network address into your host IP address and the network interface aswell):
 ```yaml
 # This is the network config written by 'subiquity'
 network:
@@ -137,44 +137,44 @@ lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
 ```
 And make sure you have internet connectivity.
 
-### Random Installs (i don't think these are necessary)
+### Random Installs (These may not be necessary for you)
 Installing Hardware resource monitoring tools
 ```bash
 sudo apt install htop lynx duf bridge-utils
 ```
-- htop is CPU usage monitoring tool
-- duf is Disk usage monitoring tool
-- lynx is CLI based web browser
-(htop is already in the system)
-![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514111025png)
+- `htop` is CPU usage monitoring tool
+- `duf` is Disk usage monitoring tool
+- `lynx` is CLI based web browser
+
 
 ```bash
 sudo apt install openntpd openssh-server sudo vim tar intel-microcode
 ```
 
-- openntpd is NTP client to synchronize time between host and entire internet
-- openssh-server is an SSH server to enable remote access
-- vim is a text editor
-- tar is a tool to compress and decompress file. Tar is used to decompress most of the downloaded file
-- intel-microcode is a set of procedures written in x86 assembly to increase low level modularity
-(the only package installed is openntpd, the rest is already installed)
-![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514111124.png)
+- `openntpd` is NTP client to synchronize time between host and entire internet
+- `openssh-server` is an SSH server to enable remote access
+- `vim` is a text editor
+- `tar` is a tool to compress and decompress file. Tar is used to decompress most of the downloaded file
+- `intel-microcode` is a set of procedures written in x86 assembly to increase low level modularity
 
-### Enable SSH Root Login (why actually?)
+### Enable SSH Root Login
+Ubuntu disables root password by default, so we have to make a root password to be able to login as root.
 ```bash
 sudo passwd root
 ```
-Ubuntu disables root password by default, so we have to make a root password to be able to login as root.
 
 Permit SSH root login by editing the file /etc/ssh/sshd_config and restarting the ssh service.
 ```bash
 sudo nano /etc/ssh/sshd_config
 ```
-![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514111909.png)
+Find the line 'PermitRootLogin' make sure it set to 'yes'
+![Pasted image 20250514111909](https://hackmd.io/_uploads/HJvYsNRGee.png)
+Then restart the ssh service.
 
 ```bash
 service ssh restart
 ```
+
 
 ### Configure Clock
 We need our server's clock to be in sync by using NTP. Use timedatectl to make sure that the time and the timezone is correct.
@@ -183,7 +183,7 @@ timedatectl set-timezone Asia/Jakarta
 ```
 
 
-### Actually Installing Cloudstack
+# Cloudstack Installation
 The Controller and Compute Node is on the same host. We import cloudstack repositories key:
 ```bash
 mkdir -p /etc/apt/keyrings 
@@ -191,17 +191,23 @@ wget -O- http://packages.shapeblue.com/release.asc | gpg --dearmor | sudo tee /e
 sudo su
 echo deb [signed-by=/etc/apt/keyrings/cloudstack.gpg] http://packages.shapeblue.com/cloudstack/upstream/debian/4.20 / > /etc/apt/sources.list.d/cloudstack.list
 ```
-The last command has to be done by the root user and you can update the Cloudstack version (in this case, it's 4.20) when a newer release is available.
+- The first step involves creating a directory to store the CloudStack public key. 
+- The `wget -O` command is used to download the specified URL and pass the output to `gpg --dearmor`, which converts the ASCII-armored key into its binary format. 
+- The `sudo tee` command redirects the output of to file, ensuring the key is properly stored for package authentication.
+- The last command has to be done by the root user (we use the Cloudstack current version, 4.20)
 
-Install Cloudstack and MySQL Server:
+### Installing Cloudstack and MySQL Server:
 ```bash
 sudo apt update
 sudo apt install cloudstack-management mysql-server
 ```
 You have to update apt first to get the new repository to show up. This will take a long time (an hour or two).
-![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514132037.png)
+
+![Pasted image 20250514132037](https://hackmd.io/_uploads/BkSWaECfgx.png)
+
 
 ### Configure MySQL
+Open mysql config file
 ```bash
 sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
 ```
@@ -226,14 +232,18 @@ Check mysql service status
 ```
 systemctl status mysql
 ```
-![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514133105.png)
 There should be "active (running)" and the Status is "Server is operational".
+![Pasted image 20250514133105](https://hackmd.io/_uploads/ryE5TEAfxe.png)
+
+
 
 Deploy Database as Root and Then Create "cloud11" User with Password "cloud11" too. Change the password and IP address to yours.
 ```bash
 sudo cloudstack-setup-databases cloud11:cloud11@localhost --deploy-as=root:root -i 192.168.1.11
 ```
-![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514133528.png)
+You should get this message if you're succesful
+![image](https://hackmd.io/_uploads/BkKpCN0flg.png)
+
 
 ### Configure Primary and Secondary Storage
 ```bash
@@ -281,10 +291,12 @@ sudo apt install qemu-kvm cloudstack-agent
 ```
 
 Enable vnc_listen in /etc/libvirt/qemu.conf (scroll down a bit):
-![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514135755.png)
+![image](https://hackmd.io/_uploads/HyXJkrAzeg.png)
+
 
 Enable LIBVIRTD_ARGS="--listen" in /etc/default/libvirtd:
-![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514140026.png)
+![image](https://hackmd.io/_uploads/B16l1rRMgx.png)
+
 
 Paste in lines to /etc/libvirt/libvirtd.conf:
 ```
@@ -354,16 +366,16 @@ sudo iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 16514 -j 
 ```
 
 Then install iptables-persistent and press yes when prompted to save current IPv4 and IPv6 rules. Don't worry when it says removing cloudstack-agent, just continue.
-![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514141609.png)
 ```bash
 sudo apt install iptables-persistent
 ```
+![Pasted image 20250514141609](https://hackmd.io/_uploads/Bk2VJBAfxg.png)
+
+
 
 Check the existence and content of /etc/iptables/rules.v4.
 
-Actually... Install cloudstack-agent again...This will uninstall iptables-persistent, which is fine i think... Just save the configuration into another file for safe keeping.
-
-Then what the hell is iptables-persistent is for then?
+Install cloudstack-agent again. And just save the configuration into another file for safe keeping.
 
 ```bash
 sudo touch /etc/iptables/rules.v4.bak
@@ -371,7 +383,8 @@ sudo iptables-save
 # Save the configuration to rules.v4.bak
 sudo apt install cloudstack-agent
 ```
-![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514152314.png)
+![Pasted image 20250514152314](https://hackmd.io/_uploads/ryfbxBCzlg.png)
+
 
 ### Disable apparmour on libvirtd
 ```bash
@@ -381,7 +394,7 @@ sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.libvirtd
 sudo apparmor_parser -R /etc/apparmor.d/usr.lib.libvirt.virt-aa-helper
 ```
 
-### Launch Management Server (finally!)
+## Launch Management Server
 ```
 sudo cloudstack-setup-management
 systemctl status cloudstack-management
@@ -391,14 +404,14 @@ tail -f /var/log/cloudstack/management/management-server.log #if you want to tro
 
 Open your web browser and connect to http://<YOUR_IP_ADDRESS>:8080.
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514144731.png)
+```
 Username: admin
 Password: password
-
-![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514144905.png)
-Continue with the installation.
-
+```
 You can change the password if you want.
-Username = Password = admin
+Continue with the installation.
+![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514144905.png)
+
 
 Zone type: Core (default)
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514145118.png)
@@ -529,7 +542,8 @@ Verify the files were created:
 ```bash
 ls -l /etc/pki/tls/private/ /etc/pki/tls/certs/
 ```
-![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514232204.png)
+![Pasted image 20250514232204](https://hackmd.io/_uploads/rksx-H0Geg.png)
+
 
 Make a directory from which the webserver will serve the web content:
 ```bash
@@ -538,7 +552,9 @@ echo "Hello, World" > /var/www/https/index.html
 ```
 
 Modify the /etc/httpd/conf.d/ssl.conf file to configre httpd to use the keys and the directory (scroll down a bit):
-![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514232952.png)
+![Pasted image 20250514232952](https://hackmd.io/_uploads/rkI2MSCMxl.png)
+
+
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514233206.png)
 
 Start the httpd service
@@ -546,7 +562,9 @@ Start the httpd service
 sudo service httpd start
 netstat -tlpn
 ```
-![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514233249.png)
+![image](https://hackmd.io/_uploads/rkm0zHAfex.png)
+
+
 
 Modify the firewall to allow https traffic (or in this case, allow everything everywhere all at once because i'm lazy)
 ```bash
@@ -563,7 +581,6 @@ When browsing, there will be a warning:
 
 
 ## TODO
-- get new uuid, reboot libvirtd and restart cloudstack-management
 - httpd unable to make secure connection
 - https://github.com/apache/cloudstack/issues/7568
 - https://serverfault.com/questions/370931/how-to-make-permanent-changes-to-iptables-of-centos-5-5
