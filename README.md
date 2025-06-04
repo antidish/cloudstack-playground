@@ -2,6 +2,7 @@
 
 
 Cloud Computing Class of DTE FTUI - 2024/2025
+
 Group 11:
 - Annisa Ardelia Setiawan (2206059471)
 - Muhammad Farrel Mirawan (2106731554)
@@ -10,11 +11,11 @@ Group 11:
 
 Instructor: Yan Maraden
 
-Note: in our examples, every password is the same as the username. This is not best practice at all. Please use strong passwords, especially in production environments.
+_Note: in our examples, every password is the same as the username. This is not best practice at all. Please use strong passwords, especially in production environments._
 
 ## Introduction
 
-![image](https://hackmd.io/_uploads/SkSpP4AMge.png)
+![image](https://github.com/user-attachments/assets/411ecbce-7202-4d6c-a446-3b0b73925a2c)
 
 Apache CloudStack is open-source software designed to deploy and manage large networks of virtual machines, as a highly available, highly scalable Infrastructure as a Service (laaS) cloud computing platform. It  manages pools of compute, storage, and network resources, providing an on-demand, elastic cloud computing service. Essentially, it turns existing virtual infrastructure into a cloud-based IaaS platform.  CloudStack is used by a number of service providers to offer public cloud services, and by many companies to provide an on-premises (private) cloud offering, or as part of a hybrid cloud solution.
 
@@ -168,7 +169,9 @@ Permit SSH root login by editing the file /etc/ssh/sshd_config and restarting th
 sudo nano /etc/ssh/sshd_config
 ```
 Find the line 'PermitRootLogin' make sure it set to 'yes'
-![Pasted image 20250514111909](https://hackmd.io/_uploads/HJvYsNRGee.png)
+
+![Pasted image 20250514111909](https://github.com/user-attachments/assets/8873fb5a-62a6-478d-9827-ab1275955127)
+
 Then restart the ssh service.
 
 ```bash
@@ -203,8 +206,7 @@ sudo apt install cloudstack-management mysql-server
 ```
 You have to update apt first to get the new repository to show up. This will take a long time (an hour or two).
 
-![Pasted image 20250514132037](https://hackmd.io/_uploads/BkSWaECfgx.png)
-
+![Pasted image 20250514132037](https://github.com/user-attachments/assets/448509e5-e4d2-4690-b2ff-567f60646da1)
 
 ### Configure MySQL
 Open mysql config file
@@ -233,17 +235,15 @@ Check mysql service status
 systemctl status mysql
 ```
 There should be "active (running)" and the Status is "Server is operational".
-![Pasted image 20250514133105](https://hackmd.io/_uploads/ryE5TEAfxe.png)
 
-
+![Pasted image 20250514133105](https://github.com/user-attachments/assets/2d9cb93b-970b-4783-a198-b54f4a4e4964)
 
 Deploy Database as Root and Then Create "cloud11" User with Password "cloud11" too. Change the password and IP address to yours.
 ```bash
 sudo cloudstack-setup-databases cloud11:cloud11@localhost --deploy-as=root:root -i 192.168.1.11
 ```
 You should get this message if you're succesful
-![image](https://hackmd.io/_uploads/BkKpCN0flg.png)
-
+![Screenshot 2025-06-05 044631](https://github.com/user-attachments/assets/4d611b76-ba26-425e-a801-20610fde3602)
 
 ### Configure Primary and Secondary Storage
 ```bash
@@ -291,12 +291,12 @@ sudo apt install qemu-kvm cloudstack-agent
 ```
 
 Enable vnc_listen in /etc/libvirt/qemu.conf (scroll down a bit):
-![image](https://hackmd.io/_uploads/HyXJkrAzeg.png)
 
+![Screenshot 2025-06-05 044702](https://github.com/user-attachments/assets/61f45191-4c76-4f42-bc4f-fad0ead7cba6)
 
 Enable LIBVIRTD_ARGS="--listen" in /etc/default/libvirtd:
-![image](https://hackmd.io/_uploads/B16l1rRMgx.png)
 
+![Screenshot 2025-06-05 044726](https://github.com/user-attachments/assets/f2e8b4b4-bdfb-45e0-945f-fb2cb1eff8e1)
 
 Paste in lines to /etc/libvirt/libvirtd.conf:
 ```
@@ -369,9 +369,7 @@ Then install iptables-persistent and press yes when prompted to save current IPv
 ```bash
 sudo apt install iptables-persistent
 ```
-![Pasted image 20250514141609](https://hackmd.io/_uploads/Bk2VJBAfxg.png)
-
-
+![Pasted image 20250514141609](https://github.com/user-attachments/assets/84c19796-57ce-473c-9f3e-057aa23148e3)
 
 Check the existence and content of /etc/iptables/rules.v4.
 
@@ -383,8 +381,7 @@ sudo iptables-save
 # Save the configuration to rules.v4.bak
 sudo apt install cloudstack-agent
 ```
-![Pasted image 20250514152314](https://hackmd.io/_uploads/ryfbxBCzlg.png)
-
+![Pasted image 20250514152314](https://github.com/user-attachments/assets/84eac179-37e5-4014-a4fd-2909cefc98f4)
 
 ### Disable apparmour on libvirtd
 ```bash
@@ -453,10 +450,12 @@ After this, you should be able to safely reboot the server and comeback to this 
 Register ISOs onto Cloudstack, either through a URL or upload it from your computer.
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514222535.png)
 
-TinyCore-16.0:
+TinyCore-16.0.
+
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514223020.png)
 
-Ubuntu Server 25.04:
+Ubuntu Server 25.04.
+
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250515004002.png)
 
 Then you can create templates based on those instances. Then, those templates can be used to create instances.
@@ -476,6 +475,7 @@ Go to Compute > Instances then click Add Instance
 5: No thanks (we just use the root disk)
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514164751.png)
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514165451.png)
+
 6: Create a new isolated network and use that.
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514175300.png)
 7: Nothing
@@ -536,14 +536,14 @@ Then you can ssh into the instance!
 sudo yum install httpd mod_ssl
 ```
 Fill in the blanks:
+
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514232040.png)
 
 Verify the files were created:
 ```bash
 ls -l /etc/pki/tls/private/ /etc/pki/tls/certs/
 ```
-![Pasted image 20250514232204](https://hackmd.io/_uploads/rksx-H0Geg.png)
-
+![Pasted image 20250514232204](https://github.com/user-attachments/assets/6684aad3-bdf2-4f77-83fa-fdf755c8398b)
 
 Make a directory from which the webserver will serve the web content:
 ```bash
@@ -552,8 +552,7 @@ echo "Hello, World" > /var/www/https/index.html
 ```
 
 Modify the /etc/httpd/conf.d/ssl.conf file to configre httpd to use the keys and the directory (scroll down a bit):
-![Pasted image 20250514232952](https://hackmd.io/_uploads/rkI2MSCMxl.png)
-
+![Pasted image 20250514232952](https://github.com/user-attachments/assets/945f978a-8830-4e8a-968b-baa77bbae84b)
 
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514233206.png)
 
@@ -562,9 +561,7 @@ Start the httpd service
 sudo service httpd start
 netstat -tlpn
 ```
-![image](https://hackmd.io/_uploads/rkm0zHAfex.png)
-
-
+![Screenshot 2025-06-05 050352](https://github.com/user-attachments/assets/90268345-5f20-4379-9104-eb842da3190a)
 
 Modify the firewall to allow https traffic (or in this case, allow everything everywhere all at once because i'm lazy)
 ```bash
