@@ -15,7 +15,7 @@ _Note: in our examples, every password is the same as the username. This is not 
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [Environment Setup](#environment-setup)
-3. [Install Ubuntu Server 25.04](#install-ubuntu-server-2504)
+3. [Installing Ubuntu Server 25.04](#installing-ubuntu-server-2504)
 4. [Network Configuration](#network-configuration)
 5. [CloudStack Installation](#cloudstack-installation)
 6. [Launch Management Server](#launch-management-server)
@@ -60,7 +60,7 @@ We used a Dell Latitude 3500 laptop for Cloudstack management and agent provided
 | Public IP     | 192.168.1.201 - 192.168.1.210 |
 | System IP     | 192.168.1.211 - 192.168.1.220 |
 
-## Install Ubuntu Server 25.04
+## Installing Ubuntu Server 25.04
 - We used a flash drive to install Ubuntu Server.
 - Create a bootable drive of Ubuntu Server onto the flash drive.
 - Boot into it.
@@ -243,26 +243,6 @@ sudo apt install openntpd openssh-server sudo vim tar intel-microcode
 - `tar` is a tool to compress and decompress file. Tar is used to decompress most of the downloaded file
 - `intel-microcode` is a set of procedures written in x86 assembly to increase low level modularity
 
-### Enable SSH Root Login
-Ubuntu disables root password by default, so we have to make a root password to be able to login as root.
-```bash
-sudo passwd root
-```
-
-Permit SSH root login by editing the file /etc/ssh/sshd_config and restarting the ssh service.
-```bash
-sudo nano /etc/ssh/sshd_config
-```
-Find the line 'PermitRootLogin' make sure it set to 'yes'
-
-![Pasted image 20250514111909](https://github.com/user-attachments/assets/8873fb5a-62a6-478d-9827-ab1275955127)
-
-Then restart the ssh service.
-
-```bash
-service ssh restart
-```
-
 
 ### Configure Clock
 We need our server's clock to be in sync by using NTP. Use timedatectl to make sure that the time and the timezone is correct.
@@ -270,8 +250,35 @@ We need our server's clock to be in sync by using NTP. Use timedatectl to make s
 timedatectl set-timezone Asia/Jakarta
 ```
 ![image](https://github.com/user-attachments/assets/275121ca-ec2a-4990-81aa-2cca81b18968)
+
 Scroll until you found your country time zone.
+
 ![image](https://github.com/user-attachments/assets/8b53bdbc-d933-43d5-8ad3-f3a08cc44124)
+
+
+### Enable SSH Root Login
+Ubuntu disables root password by default, so we have to make a root password to be able to login as root.
+```bash
+sudo passwd root
+```
+![image](https://github.com/user-attachments/assets/473120a7-f922-4c45-a1e1-2208ac86bfe7)
+
+
+Permit SSH root login by editing the file /etc/ssh/sshd_config and restarting the ssh service.
+```bash
+sudo nano /etc/ssh/sshd_config
+```
+
+Find the line 'PermitRootLogin' make sure it set to 'yes'
+
+![Pasted image 20250514111909](https://github.com/user-attachments/assets/8873fb5a-62a6-478d-9827-ab1275955127)
+
+
+Then restart the ssh service.
+
+```bash
+service ssh restart
+```
 
 
 ## Cloudstack Installation
@@ -285,7 +292,21 @@ echo deb [signed-by=/etc/apt/keyrings/cloudstack.gpg] http://packages.shapeblue.
 - The first step involves creating a directory to store the CloudStack public key. 
 - The `wget -O` command is used to download the specified URL and pass the output to `gpg --dearmor`, which converts the ASCII-armored key into its binary format. 
 - The `sudo tee` command redirects the output of to file, ensuring the key is properly stored for package authentication.
-- The last command has to be done by the root user (we use the Cloudstack current version, 4.20)
+
+
+### Cloudstack List
+Open the cloudstack list.
+```
+sudo nano /etc/apt/sources.list.d/cloudstack.list
+```
+![image](https://github.com/user-attachments/assets/0a7ed97a-1738-467a-9010-b5dad5a7abf0)
+
+We use the Cloudstack current latest version, 4.20
+```
+deb [signed-by=/etc/apt/keyrings/cloudstack.gpg] http://packages.shapeblue.com/cloudstack/upstream/debian/4.20 /
+```
+![Screenshot 2025-06-05 074548](https://github.com/user-attachments/assets/1f3cf087-5730-4226-99e1-e90eddb31353)
+
 
 ### Installing Cloudstack and MySQL Server:
 ```bash
@@ -293,14 +314,16 @@ sudo apt update
 sudo apt install cloudstack-management mysql-server
 ```
 You have to update apt first to get the new repository to show up. This will take a long time (an hour or two).
-
 ![Pasted image 20250514132037](https://github.com/user-attachments/assets/448509e5-e4d2-4690-b2ff-567f60646da1)
+
 
 ### Configure MySQL
 Open mysql config file
 ```bash
 sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
 ```
+![image](https://github.com/user-attachments/assets/66e72695-aa3d-4aa4-9c3a-73a676e1fcc2)
+
 
 Copy these lines to under the [mysqld] section:
 ```
@@ -312,11 +335,15 @@ max_connections=1000
 log-bin=mysql-bin
 binlog-format = 'ROW'
 ```
+![image](https://github.com/user-attachments/assets/f9bed32a-41ad-4cda-a14e-fd599a3167a4)
+
 
 Restart mysql service
 ```
 systemctl restart mysql
 ```
+![image](https://github.com/user-attachments/assets/cca14347-46ae-4cd9-8b32-737e2ddcb537)
+
 
 Check mysql service status
 ```
@@ -328,8 +355,11 @@ There should be "active (running)" and the Status is "Server is operational".
 
 Deploy Database as Root and Then Create "cloud11" User with Password "cloud11" too. Change the password and IP address to yours.
 ```bash
-sudo cloudstack-setup-databases cloud11:cloud11@localhost --deploy-as=root:root -i 192.168.1.11
+sudo cloudstack-setup-databases cloud:cloud@localhost --deploy-as=root:grup11 -i 192.168.1.3
 ```
+![image](https://github.com/user-attachments/assets/2e39c8de-98ee-439e-b5e8-70b93bf21ee9)
+
+
 You should get this message if you're succesful
 ![Screenshot 2025-06-05 044631](https://github.com/user-attachments/assets/4d611b76-ba26-425e-a801-20610fde3602)
 
@@ -494,41 +524,45 @@ Username: admin
 Password: password
 ```
 You can change the password if you want.
-Continue with the installation.
+
+### Continue with the installation.
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514144905.png)
 
-
-Zone type: Core (default)
+### Zone type: Core (default)
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514145118.png)
 
-Core zone type: Advanced (default)
+### Core zone type: Advanced (default)
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514145122.png)
 
-Zone details: fill in the Name, required DNSes, and change the Hypervisor to KVM
+### Zone details: fill in the Name, required DNSes, and change Hypervisor to KVM
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514145257.png)
 
-Network: skip the physical network
-![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514145349.png)
-For public traffic: reserve a range of IP addresses
-![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514145504.png)
-For Pod: make a new Pod with a range of reserved IP addresses
-![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514145715.png)
-For Guest Traffic: use 3300-3399
+### Network
+- Skip the physical network
+  ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514145349.png)
+- For public traffic: reserve a range of IP addresses
+  ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514145504.png)
+- For Pod: make a new Pod with a range of reserved IP addresses
+  ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514145715.png)
+- For Guest Traffic: use 3300-3399
 
-Add resources: for cluster, make a new cluster
-![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514150621.png)
-For IP address: insert the Management Server's IP Address and use the root's login credentials
-![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514150233.png)
-For Primary storage:
-![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514150412.png)
-For Secondary storage:
-![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514152427.png)
+### Add resources
+- For cluster, make a new cluster
+  ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514150621.png)
+- For IP address: insert the Management Server's IP Address and use the root's login credentials
+  ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514150233.png)
+- For Primary storage:
+  ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514150412.png)
+- For Secondary storage:
+  ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514152427.png)
 
-Launch the zone!
+### Launch the zone
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514152441.png)
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514153539.png)
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514153540.png)
+> Success! Zone is launched.
 
+### System VM
 Make sure the two system VMs are running:
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514164430.png)
 After this, you should be able to safely reboot the server and comeback to this web console successfully.
@@ -538,43 +572,40 @@ After this, you should be able to safely reboot the server and comeback to this 
 Register ISOs onto Cloudstack, either through a URL or upload it from your computer.
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514222535.png)
 
-TinyCore-16.0.
-
+### TinyCore-16.0
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514223020.png)
 
-Ubuntu Server 25.04.
-
+### Ubuntu Server 25.04
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250515004002.png)
-
 Then you can create templates based on those instances. Then, those templates can be used to create instances.
 
 ### Starting a New Instance
 Go to Compute > Instances then click Add Instance
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514164559.png)
 
-1: admin account
+#### 1: admin account
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514164657.png)
-2: deploy on the FRIENDZONE zone.
+#### 2: deploy on the FRIENDZONE zone.
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514164658.png)
-3: Use the default CentOS template.
+#### 3: Use the default CentOS template.
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514164748.png)
-4: Use the Small Instance Compute Offering.
+#### 4: Use the Small Instance Compute Offering.
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514164749.png)
-5: No thanks (we just use the root disk)
+#### 5: No thanks (we just use the root disk)
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514164751.png)
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514165451.png)
-
-6: Create a new isolated network and use that.
+#### 6: Create a new isolated network and use that.
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514175300.png)
-7: Nothing
+#### 7: Nothing
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514171529.png)
-8: Nothing
+#### 8: Nothing
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514171530.png)
-9: Name the Instance
+#### 9: Name the Instance
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514171610.png)
-Launch!
+#### Launch!
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514175321.png)
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250514175358.png)
+> Successfully launched!
 
 
 ## CentOS Instance Fun Stuff
@@ -663,15 +694,3 @@ Don't forget to configure the port forwarding of Cloudstack.
 When browsing, there will be a warning:
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250515001216.png)
 ![image](https://raw.githubusercontent.com/antidish/cloudstack-playground/refs/heads/main/assets/Pasted%20image%2020250515001218.png)
-
-
-## TODO
-- httpd unable to make secure connection
-- https://github.com/apache/cloudstack/issues/7568
-- https://serverfault.com/questions/370931/how-to-make-permanent-changes-to-iptables-of-centos-5-5
-- https://superuser.com/questions/1048221/how-to-make-windows-send-specific-traffic-to-specific-ethernet-ports
-- change timezone in CentOS
-- mail server https://superuser.com/questions/306163/what-is-the-you-have-new-mail-message-in-linux-unix
-- install ISOs and other templates
-- multiple machines in a cluster
-- VPN tunnel/reverse proxy/domain name to gain access from the internet
