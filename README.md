@@ -382,6 +382,8 @@ sudo exportfs -a
 ```
 
 ### Configure NFS Server
+NFS (Network File System) is a protocol that allows remote access to files over a network, enabling a system to share files and directories with other systems as if they were local. NFS allows users and programs to access files on remote computers in a similar way to how they access local storage, providing transparency in accessing data across multiple systems. It is commonly used in distributed file systems and network storage solutions. NFS operates over TCP/IP and is typically used in UNIX and Linux environments, although it is also available for other operating systems.
+
 Paste this line into /etc/default/nfs-kernel-server:
 ```
 RPCMOUNTDOPTS="-p 892 --manage-gids"
@@ -406,6 +408,8 @@ service nfs-kernel-server restart
 ```
 
 ### Configure Cloudstack Host with KVM Hypervisor (and libvirtd config)
+In this project we will use KVM. 
+KVM (Kernel-based Virtual Machine) is an open-source virtualization technology built into the Linux kernel. It enables a Linux system to act as a hypervisor, allowing it to run multiple virtual machines (VMs), each with its own isolated environment, using the same physical hardware resources.
 ```
 sudo apt install qemu-kvm cloudstack-agent
 ```
