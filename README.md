@@ -12,6 +12,9 @@ Instructor: Yan Maraden
 
 _Note: in our examples, every password is the same as the username. This is not best practice at all. Please use strong passwords, especially in production environments._
 
+## Video Tutorial
+https://youtu.be/UGW-EcW1OIQ
+
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [Environment Setup](#environment-setup)
@@ -21,7 +24,6 @@ _Note: in our examples, every password is the same as the username. This is not 
 6. [Launch Management Server](#launch-management-server)
 7. [Installing Instances](#installing-instances)
 8. [CentOS Instance Fun Stuff](#centos-instance-fun-stuff)
-9. [TODO](#TODO)
 
 ## Introduction
 
