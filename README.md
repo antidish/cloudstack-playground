@@ -1,6 +1,5 @@
 # Apache Cloudstack Installation and Configuration
 
-
 Cloud Computing Class of DTE FTUI - 2024/2025
 
 Group 11:
@@ -13,68 +12,148 @@ Instructor: Yan Maraden
 
 _Note: in our examples, every password is the same as the username. This is not best practice at all. Please use strong passwords, especially in production environments._
 
+## Table of Contents
+1. [Introduction](#introduction)
+2. [Environment Setup](#environment-setup)
+3. [Install Ubuntu Server 25.04](#install-ubuntu-server-2504)
+4. [Network Configuration](#network-configuration)
+5. [CloudStack Installation](#cloudstack-installation)
+6. [Launch Management Server](#launch-management-server)
+7. [Installing Instances](#installing-instances)
+8. [CentOS Instance Fun Stuff](#centos-instance-fun-stuff)
+9. [TODO](#TODO)
+
 ## Introduction
 
 ![image](https://github.com/user-attachments/assets/411ecbce-7202-4d6c-a446-3b0b73925a2c)
 
 Apache CloudStack is open-source software designed to deploy and manage large networks of virtual machines, as a highly available, highly scalable Infrastructure as a Service (laaS) cloud computing platform. It  manages pools of compute, storage, and network resources, providing an on-demand, elastic cloud computing service. Essentially, it turns existing virtual infrastructure into a cloud-based IaaS platform.  CloudStack is used by a number of service providers to offer public cloud services, and by many companies to provide an on-premises (private) cloud offering, or as part of a hybrid cloud solution.
 
+### Architecture
+![4179 011](https://github.com/user-attachments/assets/d3b63f95-893f-46f4-a242-0a61d12c71ee)
+
+- Management Server: The central orchestrator that handles resource allocation, VM provisioning, and overall cloud operations.
+- Hypervisor Hosts: The compute layer where virtual machines run, supporting hypervisors like KVM, VMware, and XenServer.
+- Primary Storage: Direct storage for virtual machines, ensuring fast access to disk resources.
+- Secondary Storage: Stores templates, ISO images, and VM snapshots, shared across multiple zones.
+- CloudStack UI/API: The interface for users and administrators to interact with the cloud, offering both a web-based UI and RESTful API.
+
 ## Environment Setup
 We used a Dell Latitude 3500 laptop for Cloudstack management and agent provided by our instructor, Yan Maraden. 
 
 ### Hardware Configuration
-```
-CPU : Intel Core i5 gen 8
-RAM : 24 GB
-Storage : 250GB
-Network : Ethernet 100GB/s
-Operating System : Ubuntu Server 25.04
-```
+| Component | Specification           |
+| --------- | ----------------------- |
+| CPU       | Intel Core i5 (8th Gen) |
+| RAM       | 24 GB                   |
+| Storage   | 250 GB SSD              |
+| Network   | Ethernet 100 Gb/s       |
+| OS        | Ubuntu Server 25.04     |
 
 ### Network Configuration
-```
-Network Address: 192.168.1.0/24
-Host IP address: 192.168.1.11
-Gateway: 192.168.1.1
-Management IP: 192.168.1.11
-Public IP: 192.168.1.201-192.168.1.210
-System IP: 192.168.1.211-192.168.1.220
-```
+| Configuration | Value                         |
+| ------------- | ----------------------------- |
+| Network       | 192.168.1.0/24                |
+| Host IP       | 192.168.1.11                  |
+| Gateway       | 192.168.1.1                   |
+| Management IP | 192.168.1.11                  |
+| Public IP     | 192.168.1.201 - 192.168.1.210 |
+| System IP     | 192.168.1.211 - 192.168.1.220 |
 
 ## Install Ubuntu Server 25.04
 - We used a flash drive to install Ubuntu Server.
 - Create a bootable drive of Ubuntu Server onto the flash drive.
 - Boot into it.
 - On the GRUB menu, click Try or Install Ubuntu Server
-- Choose your language: default English
-- Choose your keyboard layout: default English (US)
-- Choose the type of installation: default Ubuntu Server, not Ubuntu Server (minimized). And choose Search for third-party drivers.
-- Network configuration for internet connection: We used a wired connection.
-- Proxy configuration: we used no proxies (blank)
-- Ubuntu archive mirror configuration: we used the default mirror address (http://id.archive.ubuntu.com/ubuntu/). Make sure the mirror location passes the connectivity test.
-- Guided storage configuration. We used the entire disk and set it up as an LVM group (default). We used no encryption (LUKS).
-- Storage configuration. We extended the ubuntu-lv to take up the entire space of the ubuntu-vg, because it defaults to 100G while there's 235.421G of total space on the disk. We leave everything else as default. Confirm destructive action.
-- Profile configuration: enter your username and password.
-- SSH configuration: choose to install the OpenSSH server package so that we don't need to install it later.
-- Third-party drivers: we have no applicable third-party drivers available, but choose to install them if you have.
-- Featured server snaps: we skip them.
-- Installing system. After it's done: Reboot now, remove the installation medium, then press ENTER.
-- Login using the username and password.
-- DONE! You can immediately SSH to the server because we've already installed OpenSSH Server beforehand. (Install net-tools first to use ifconfig to see the IP address of the server).
+
+### Choosing Language
+Language: default English
+![image](https://github.com/user-attachments/assets/4fc70e51-d359-491c-a670-bd7752d079f7)
+
+### Choosing Keyboard
+Keyboard layout: default English (US)
+![image](https://github.com/user-attachments/assets/5e451bed-037d-4026-9a63-ffc584553ea4)
+
+### Installation Type
+The type of installation: default Ubuntu Server, not Ubuntu Server (minimized). And choose Search for third-party drivers.
+![image](https://github.com/user-attachments/assets/76ea7ef6-f520-4c3d-b621-2d944a41aa53)
+
+### Internet Connection
+Network configuration for internet connection: We used a wired connection.
+```
+DHCPv4  192.168.1.3/24
+```
+![image](https://github.com/user-attachments/assets/1ea6da4b-dd3d-412f-a69d-234a2880d3ec)
+
+### Proxy configuration
+We used no proxies, we left it blank.
+![image](https://github.com/user-attachments/assets/cc2290c6-c289-4b45-9a7b-1dc906463f9b)
+
+### Ubuntu Archive Mirror Configuration
+We used the default mirror address.
+```
+http://id.archive.ubuntu.com/ubuntu/
+```
+Make sure the mirror location passes the connectivity test.
+![image](https://github.com/user-attachments/assets/7a03c312-8503-456e-bdf5-caae77380955)
 
 
-## Install Cloudstack on Ubuntu Server 25.04
+### Guided Storage Configuration
+In guided storage configuration. We used the entire disk and set it up as an LVM group (default). We used no encryption (LUKS).
+![image](https://github.com/user-attachments/assets/3f56d829-8a7b-4136-8f10-ecf817ef2e77)
+
+### Storage Configuration
+We extended the ubuntu-lv to take up the entire space of the ubuntu-vg, because it defaults to 100G while there's 235.421G of total space on the disk. We leave everything else as default. Confirm destructive action.
+![image](https://github.com/user-attachments/assets/a2d72c50-1c72-45db-955f-323a64da5135)
+![image](https://github.com/user-attachments/assets/0ccce91d-69f4-48ef-b32c-97afa5af4332)
+
+### Profile Configuration
+Enter your username and password.
+![image](https://github.com/user-attachments/assets/159bc0af-66c0-4d49-a13e-f02f30e3787e)
+
+### SSH configuration
+We choose to install the OpenSSH server package so that we don't need to install it later.
+![image](https://github.com/user-attachments/assets/dd71e02f-e4f2-4b0b-9020-acc56500fd89)
+
+### Third-Party Drivers
+We have no applicable third-party drivers available, but choose to install them if you have.
+![image](https://github.com/user-attachments/assets/e8e2e89e-17c0-46ba-bd2e-8ad243cbe9a7)
+
+### Featured Server Snaps
+We skip all of them.
+![image](https://github.com/user-attachments/assets/9b6adc09-0211-4a03-bf17-a24c6cf86361)
+
+### Installing System
+![image](https://github.com/user-attachments/assets/e250a0f1-2fb6-4587-8b86-96207ee9bc1e)
+After it's done: click Reboot now, remove the installation medium, then press ENTER.
+![image](https://github.com/user-attachments/assets/d64d8b6f-5d6a-49a9-b3a9-dbcfacbcf268)
+![image](https://github.com/user-attachments/assets/3a2ce287-e256-49b4-b455-6cfbc75304b6)
+
+### Login
+Login using the username and password.
+![image](https://github.com/user-attachments/assets/64a0742a-758a-4877-afd7-0a44c3c1afb4)
+
+> DONE! Server is now ready for SSH access.
+
+### SSH Access
+We use PuTTY to do SSH.
+![image](https://github.com/user-attachments/assets/d82e8798-38c1-4e75-85d3-c59e264dd93c)
+
+
+## Network Configuration
 Sources:
 - https://www.youtube.com/watch?v=DlJg3LYvIIs
 - https://www.youtube.com/watch?v=mvuSBFGSYWI&list=PLW7vgBNPiQhmvj6dnS5ss3IdTqHCqvknm
 
-### Network Configuration
+### Edit File in Netplan
 There's a file in /etc/netplan/50-cloud-init.yaml. 
 
 ```
 cd /etc/netplan
 sudo nano ./50-cloud-init.yaml
 ```
+![image](https://github.com/user-attachments/assets/23517bd0-dc31-4398-bf2b-b2e9639cb0cc)
+
 Edit that file into this (change the network address into your host IP address and the network interface aswell):
 ```yaml
 # This is the network config written by 'subiquity'
@@ -101,14 +180,20 @@ network:
         stp: false
         forward-delay: 0
 ```
+![image](https://github.com/user-attachments/assets/998faa0f-da56-4d00-a1a1-f039e4fffeaa)
 
+### Applying Network Configuration
 Apply the network configuration (if you change the network address, this will disconnect your SSH session and you would have to reconnect back using the new network address):
 ```bash
 sudo netplan generate #generate config file for the renderer
 sudo netplan apply  #applies network configuration to the system
 sudo reboot #reboot the system
 ```
+- `sudo netplan generate`: Creates a network configuration file for the specified renderer.  
+- `sudo netplan apply`: Applies the generated network configuration to the system.  
+- `sudo reboot`: Restarts the system to ensure the applied network settings take effect.  
 
+### Checking Connection
 Check ifconfig to make sure there's a network bridge called cloudbr0:
 ```
 cloudbr0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
@@ -136,6 +221,7 @@ lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
         TX packets 84  bytes 6352 (6.3 KB)
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 ```
+![image](https://github.com/user-attachments/assets/cd6de4d5-8ca2-4f2a-889e-fa772ccc68f3)
 And make sure you have internet connectivity.
 
 ### Random Installs (These may not be necessary for you)
@@ -151,7 +237,6 @@ sudo apt install htop lynx duf bridge-utils
 ```bash
 sudo apt install openntpd openssh-server sudo vim tar intel-microcode
 ```
-
 - `openntpd` is NTP client to synchronize time between host and entire internet
 - `openssh-server` is an SSH server to enable remote access
 - `vim` is a text editor
@@ -184,9 +269,12 @@ We need our server's clock to be in sync by using NTP. Use timedatectl to make s
 ```bash
 timedatectl set-timezone Asia/Jakarta
 ```
+![image](https://github.com/user-attachments/assets/275121ca-ec2a-4990-81aa-2cca81b18968)
+Scroll until you found your country time zone.
+![image](https://github.com/user-attachments/assets/8b53bdbc-d933-43d5-8ad3-f3a08cc44124)
 
 
-# Cloudstack Installation
+## Cloudstack Installation
 The Controller and Compute Node is on the same host. We import cloudstack repositories key:
 ```bash
 mkdir -p /etc/apt/keyrings 
