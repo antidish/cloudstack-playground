@@ -521,12 +521,15 @@ sudo apt install cloudstack-agent
 ![Pasted image 20250514152314](https://github.com/user-attachments/assets/84eac179-37e5-4014-a4fd-2909cefc98f4)
 
 ### Disable apparmour on libvirtd
+**AppArmor** is a security module for the Linux kernel that provides MAC for restricting the capabilities of programs, limiting the actions they can perform. It is used to enforce security policies, isolating and protecting processes from potentially malicious actions.
+
 ```bash
 sudo ln -s /etc/apparmor.d/usr.sbin.libvirtd /etc/apparmor.d/disable/
 sudo ln -s /etc/apparmor.d/usr.lib.libvirt.virt-aa-helper /etc/apparmor.d/disable/
 sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.libvirtd
 sudo apparmor_parser -R /etc/apparmor.d/usr.lib.libvirt.virt-aa-helper
 ```
+These steps will effectively disable AppArmor's security policies for libvirtd, allowing it to operate without the restrictions imposed by AppArmor.
 
 ## Launch Management Server
 ```
